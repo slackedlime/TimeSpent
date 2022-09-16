@@ -19,6 +19,8 @@ cargo build --bin daemon --release
 cargo build --bin gui --release
 ```
 
+You should find you executables in the /target/release/ directory
+
 Be sure to make the daemon binary a start up application.
 
 ## Todo
