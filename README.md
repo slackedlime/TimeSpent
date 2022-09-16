@@ -9,6 +9,7 @@
 The Daemon binary tracks the amount of time you used an application. Make sure it's running in the background.
 
 In the Gui, You can right click the names of applications to open a Context menu.
+In the context menu, you have options to Rename, Hide/Unhide, and Delete Items. 
 
 ## Building from Source
 
