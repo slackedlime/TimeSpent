@@ -10,6 +10,6 @@ pub fn get_dirs() -> [PathBuf; 2] {
 }
 
 pub fn get_date() -> String {
-	let t = chrono::offset::Local::now();
-	return format!("{}/{}/{}", t.year(), t.month(), t.day());
+	let t = chrono::offset::Local::now();  
+	return format!("{}/{:0>2}/{:0>2}", t.year(), t.month(), t.day())
 }
