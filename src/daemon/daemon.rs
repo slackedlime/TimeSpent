@@ -112,13 +112,19 @@ fn main() {
 
 		println!("Created {:?}", processes_dir);
 	}
-
+	
 	// Make sysinfo only refresh the process list
 	let only_processes = sysinfo::ProcessRefreshKind::new();
 	let r = sysinfo::RefreshKind::new().with_processes(only_processes);
 	
 	let mut system = sysinfo::System::new_with_specifics(r);
-	
+
+	// If TimeSpentDaemon is already running, then stop execution
+	if system.processes_by_name("TimeSpentDaemon").count() > 1 {
+		println!("The Daemon is already running");
+		process::exit(1);
+	}
+
 	loop {
 		system.refresh_processes_specifics(only_processes);
 		let (name, exe) = get_focused_application(&system);

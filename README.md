@@ -25,7 +25,7 @@ cargo build --bin gui --release
 
 You should find you executables in the /target/release/ directory
 
-Be sure to make the daemon binary a start up application.
+Rename the daemon binary to "TimeSpentDaemon" and make it a start up application.
 
 ## TODO
 
