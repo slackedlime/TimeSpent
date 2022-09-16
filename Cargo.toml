@@ -1,0 +1,23 @@
+[package]
+name = "time-spent"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "daemon"
+path = "src/daemon/daemon.rs"
+
+[[bin]]
+name = "gui"
+path = "src/gui/gui.rs"
+
+[dependencies]
+serde_json = "1.0.85"
+dirs = "4.0.0"
+chrono = "0.4.22"
+winapi = "0.3.9"
+sysinfo = "0.26.1"
+egui_extras = "0.19.0"
+eframe = {version = "0.19.0", features = ["dark-light"]}
