@@ -9,7 +9,7 @@ The Daemon binary tracks the amount of time you used an application. Make sure i
 
 In the Gui, You can right click the names of applications to open a Context menu.
 
-## Build from Source
+## Building from Source
 Install [Rust](https://www.rust-lang.org/tools/install) if you don't have it already
 
 ```
@@ -23,7 +23,10 @@ You should find you executables in the /target/release/ directory
 
 Be sure to make the daemon binary a start up application.
 
-## Todo
+## TODO
+- Upload to AUR.
+- Make Appimage.
+- Make an Installer for Windows.
 - Add Groups Feature.
 - Add a bargraph to Status menu.
 - Fix Context Menu going out of screen.
