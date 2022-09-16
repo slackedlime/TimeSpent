@@ -68,7 +68,7 @@ impl TimeSpent {
 			ui.add_space(5.);
 
 			for i in status_data {
-				ui.label(format!("{:?}", i));
+				ui.label(format!("{}: {:?}secs", i.0, i.1.as_i64().unwrap()));
 			}
 		});
 	}
