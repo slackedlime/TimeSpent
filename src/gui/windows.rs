@@ -40,7 +40,12 @@ impl TimeSpent {
 	pub fn draw_raw_data_window(&mut self, ctx: &egui::Context) {
 		egui::Window::new("Raw Data").open(&mut self.win.raw_data_window)
 		.vscroll(true).show(ctx, |ui| {
-			ui.label(format!("{:#?}", self.win.raw_data));
+			let json = serde_json::to_string_pretty(&self.win.raw_data);
+
+			ui.add( egui::TextEdit::multiline(&mut json.unwrap())
+					.code_editor()
+					.interactive(false)
+			)
 		});
 	}
 }
