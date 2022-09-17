@@ -49,40 +49,46 @@ impl TimeSpent {
 				);
 			}
 
-			if bar_data.len() > 3 {
-				let bar_chart = plot::BarChart::new(bar_data.clone())
-								.color(egui::Color32::LIGHT_BLUE);
+			let bar_chart = plot::BarChart::new(bar_data.clone())
+							.color(egui::Color32::LIGHT_BLUE);
 
-				ui.collapsing("Time Graph", |ui| {
-					ui.monospace("X: Days");
-					ui.monospace("Y: Time in Minutes");
-	
-					plot::Plot::new("Graph")
-					.show_x(false)
-					.allow_boxed_zoom(false)
-					.y_axis_formatter(|i, _| {
-						if i > 0. {
-							format!("{} minutes", i)
+			ui.collapsing("Time Graph", |ui| {
+				ui.monospace("X: Days");
+				ui.monospace("Y: Time in Minutes");
+
+				plot::Plot::new("Graph")
+				.show_x(false)
+				.allow_boxed_zoom(false)
+				.y_axis_formatter(|i, _| {
+					if i > 0. {
+						format!("{} minutes", i)
+					} else {
+						String::new()
+					}
+				})
+				.coordinates_formatter(
+					plot::Corner::LeftBottom,
+					plot::CoordinatesFormatter::new(move |point, _| {
+						let default = "Use Ctrl+Scroll to Zoom in/out".to_string();
+
+						// if X or Y is negative, then show a default message
+						if point.x < 0. || point.y < 0. {
+							return default
+						}
+
+						let index = point.x.floor() as usize;
+						if let Some(data) = bar_data.get(index) {
+							format!("{}", data.name)
 						} else {
-							String::new()
+							default
 						}
 					})
-					.coordinates_formatter(
-						plot::Corner::LeftBottom,
-						plot::CoordinatesFormatter::new(move |point, _| {
-							let index = point.x.floor() as usize;
-							if let Some(data) = bar_data.get(index) {
-								format!("{}", data.name)
-							} else {
-								String::new()
-							}
-						})
-					)
-					.show(ui, |ui| {
-						ui.bar_chart(bar_chart);
-					});
+				)
+				.show(ui, |ui| {
+					ui.bar_chart(bar_chart);
 				});
-			}
+			});
+			
 		});
 	}
 }
