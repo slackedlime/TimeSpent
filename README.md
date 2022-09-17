@@ -33,4 +33,3 @@ Rename the daemon binary to "TimeSpentDaemon" and make it a start up application
 - Make Appimage.
 - Make an Installer for Windows.
 - Add Groups Feature.
-- Add a bargraph to Status menu.
