@@ -8,7 +8,9 @@
 The Daemon binary tracks the amount of time you used an application. Make sure it's running in the background.
 
 In the Gui, You can right click the names of applications to open a Context menu.
-In the context menu, you have options to Rename, Hide/Unhide, and Delete Items. 
+In the context menu, you have options to Rename, Hide/Unhide, and Delete Items.
+
+You can find a Graph of how much time you spent on an application when you click on the name or by right clicking on its name and going to "More Info".
 
 xdotool is needed on Linux for this program to work.
 
