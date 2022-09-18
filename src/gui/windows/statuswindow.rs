@@ -56,7 +56,7 @@ impl TimeSpent {
 				ui.monospace("X: Days");
 				ui.monospace("Y: Time in Minutes");
 
-				plot::Plot::new("Graph")
+				plot::Plot::new(self.win.status_data["name"].to_string())
 				.show_x(false)
 				.allow_boxed_zoom(false)
 				.y_axis_formatter(|i, _| {
@@ -69,18 +69,18 @@ impl TimeSpent {
 				.coordinates_formatter(
 					plot::Corner::LeftBottom,
 					plot::CoordinatesFormatter::new(move |point, _| {
-						let default = "Use Ctrl+Scroll to Zoom in/out".to_string();
+						let msg = "Use Ctrl+Scroll to Zoom in/out".to_string();
 
 						// if X or Y is negative, then show a default message
 						if point.x < 0. || point.y < 0. {
-							return default
+							return msg
 						}
 
 						let index = point.x.floor() as usize;
 						if let Some(data) = bar_data.get(index) {
 							format!("{}", data.name)
 						} else {
-							default
+							msg
 						}
 					})
 				)
