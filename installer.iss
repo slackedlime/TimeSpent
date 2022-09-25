@@ -13,7 +13,7 @@
 AppId={{00659E63-BD87-4602-815D-71D2BB6419FA}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppVerName={#MyAppName} v1.0
+AppVerName=v{#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -24,7 +24,7 @@ LicenseFile=LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=target
-OutputBaseFilename=TimeSpent Setup
+OutputBaseFilename=TimeSpent Setup v{#MyAppVersion}
 SetupIconFile=imgs\hummingbird_new.ico
 Compression=lzma
 SolidCompression=yes
