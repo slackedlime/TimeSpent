@@ -12,6 +12,26 @@ impl TimeSpent {
 			);
 			
 			ui.add_space(1.);
+			
+			ui.horizontal(|ui| {
+				ui.set_min_width(180.);
+
+				ui.label("Executable path: ");
+
+				ui.add(
+					egui::Label::new(
+						egui::RichText::new(
+
+								self.win.status_data["exeLocation"]
+								.as_str().unwrap_or("null")
+								
+						).monospace()
+					).wrap(true)
+				);
+
+			});
+
+			ui.add_space(1.);
 
 			ui.colored_label(
 				egui::Color32::LIGHT_RED, 

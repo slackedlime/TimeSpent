@@ -18,13 +18,9 @@ impl TimeSpent {
 					egui::Label::new(
 						egui::RichText::new(
 
-							if self.win.status_data["exeLocation"].is_null() {
-								"null"
-							} else {
-								self.win.status_data["exeLocation"]
-								.as_str().unwrap()
-							}
-
+							self.win.status_data["exeLocation"]
+							.as_str().unwrap_or("null")
+							
 						).monospace()
 					).wrap(true)
 				);
