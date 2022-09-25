@@ -100,7 +100,7 @@ fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path)
 }
 
 fn main() {
-	let [processes_dir, _icon_dir] = globals::get_dirs(); 
+	let [processes_dir, _] = globals::get_dirs();
 	
 	if !processes_dir.is_dir() {
 		if let Err(e) = fs::create_dir_all(&processes_dir) {
