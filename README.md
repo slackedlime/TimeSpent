@@ -41,5 +41,4 @@ Rename the daemon binary to "TimeSpentDaemon" and make it a start up application
 
 - Upload to AUR.
 - Make Appimage.
-- Make an Installer for Windows.
 - Add Groups Feature.
