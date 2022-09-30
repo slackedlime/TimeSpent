@@ -20,6 +20,7 @@ winapi = "0.3.9"
 serde_json = "1.0.85"
 dirs = "4.0.0"
 chrono = "0.4.22"
+image = "0.24.4"
 sysinfo = "0.26.1"
 egui_extras = "0.19.0"
 eframe = {version = "0.19.0", features = ["dark-light"]}

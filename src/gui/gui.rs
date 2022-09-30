@@ -99,11 +99,24 @@ impl eframe::App for TimeSpent {
 }
 
 fn main() {
+	let icon_data = include_bytes!("../../imgs/hummingbird_new.ico");
+
+	let icon = image::load_from_memory_with_format(
+		icon_data, image::ImageFormat::Ico
+	).expect("Could not load icon").blur(3.5).to_rgba8();
+
+
 	let mut win_opts = eframe::NativeOptions::default();
 	win_opts.initial_window_size = Some(egui::Vec2::new(550., 560.));
 	win_opts.resizable = true;
 	win_opts.default_theme = win_opts.system_theme()
 							 .unwrap_or(eframe::Theme::Dark);
+	win_opts.icon_data = Some(eframe::IconData {
+		width: icon.width(),
+		height: icon.height(),
+		
+		rgba: icon.into_raw(),
+	});
 
 	eframe::run_native("Time Spent", win_opts,
 		Box::new(|cc| Box::new(TimeSpent::new(cc))));
