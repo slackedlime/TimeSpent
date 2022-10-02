@@ -2,8 +2,6 @@
 
 #[path = "../globals.rs"]
 mod globals;
-#[path = "../getconfig.rs"]
-mod getconfig;
 mod write;
 
 use std::{thread, fs, process, path::Path, time::Duration};
@@ -71,12 +69,12 @@ fn main() {
 		println!("Created {:?}", processes_dir);
 	}
 	
-	let config = match getconfig::get_config(&config_file) {
+	let config = match globals::get_config(&config_file) {
 		Ok(json) => json,
 
 		Err(e) => {
 			println!("Error: {}", e);
-			getconfig::get_default_config()
+			globals::get_default_config()
 		}
 	};
 

@@ -2,9 +2,6 @@
 
 #[path = "../globals.rs"]
 mod globals;
-#[path = "../getconfig.rs"]
-mod getconfig;
-
 mod utils;
 mod table;
 mod windows;
@@ -33,12 +30,12 @@ impl TimeSpent {
 		let hidden_processes = 
 			utils::get_hidden_processes(&hidden_processes_file);
 
-		let config = match getconfig::get_config(&config_file) {
+		let config = match globals::get_config(&config_file) {
 			Ok(json) => json,
 	
 			Err(e) => {
 				println!("Error: {}", e);
-				getconfig::get_default_config()
+				globals::get_default_config()
 			}
 		};
 

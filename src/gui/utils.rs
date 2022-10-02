@@ -15,7 +15,10 @@ pub fn get_info(json_dir: &Path, config: &JsonValue) -> Vec<JsonValue> {
 					files.push(json);
 				} else {
 					if config["autoDeleteCorrupted"].as_bool().unwrap_or(false) {
-						fs::remove_file(&proper_path).unwrap();
+						if let Err(e) = fs::remove_file(&proper_path) {
+							println!("Failed to remove corrupted file");
+							println!("Error: {}", e);
+						};
 					}
 
 					println!("Error: Could not read {:?}", proper_path);
