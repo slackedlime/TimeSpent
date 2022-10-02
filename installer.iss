@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TimeSpent"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "Slacked Lime"
 #define MyAppURL "https://github.com/slackedlime/TimeSpent"
 #define MyAppExeName "TimeSpent.exe"
