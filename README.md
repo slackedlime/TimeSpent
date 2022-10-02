@@ -22,6 +22,13 @@ You can find a Graph of how much time you spent on an application when you click
 
 xdotool is needed on Linux for this program to work.
 
+## Editing the config
+`tickSpeed`: Controls how often the application checks for the focused app. It is recommended to NOT put it above 10
+
+`autoDeleteCorrupted`: Deletes corrupted json files automatically (Disable it if you plan on manually editing the Process Folder Json)
+
+`safeWrite`: Decreases the probability of json being corrupted. Disabling it might increase performance (NOT RECOMMENDED)
+
 ## Building from Source
 
 Install [Rust](https://www.rust-lang.org/tools/install) if you don't have it already
