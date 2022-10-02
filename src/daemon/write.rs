@@ -42,7 +42,15 @@ pub fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path, config: &Jso
 		json!(info["perDayTimeRun"][&today].as_u64().unwrap() + tick_speed);
 	//
 
-	fs::write(&data_file, info.to_string().as_bytes())?;
+	// safeWrite should decrease the chance of corruption when writing
+	if config["safeWrite"].as_bool().unwrap_or(false) {
+		let temp_file = json_dir.join("temp");
+		fs::write(&temp_file, info.to_string().as_bytes())?;
+
+		fs::rename(&temp_file, &data_file)?;
+	} else {
+		fs::write(&data_file, info.to_string().as_bytes())?;
+	}
 
 	Ok(())
 }
