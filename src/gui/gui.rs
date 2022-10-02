@@ -2,6 +2,9 @@
 
 #[path = "../globals.rs"]
 mod globals;
+#[path = "../getconfig.rs"]
+mod getconfig;
+
 mod utils;
 mod table;
 mod windows;
@@ -16,6 +19,8 @@ struct TimeSpent {
 	win: windows::Window,
 	processes_dir: PathBuf,
 
+	config: serde_json::Value,
+
 	hidden_processes_file: PathBuf,
 	hidden_processes: Vec<serde_json::Value>,
 	hide: bool,
@@ -23,17 +28,27 @@ struct TimeSpent {
 
 impl TimeSpent {
 	fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-		let [processes_dir, hidden_processes_file] = globals::get_dirs();
-		let data = utils::get_info(&processes_dir);
+		let [processes_dir, config_file, hidden_processes_file] = globals::get_dirs();
 
 		let hidden_processes = 
 			utils::get_hidden_processes(&hidden_processes_file);
 
+		let config = match getconfig::get_config(&config_file) {
+			Ok(json) => json,
+	
+			Err(e) => {
+				println!("Error: {}", e);
+				getconfig::get_default_config()
+			}
+		};
+
+		let data = utils::get_info(&processes_dir, &config);
+
 		let win = windows::Window::new();
 
 		return TimeSpent { 
-			data, win, processes_dir, hidden_processes_file,
-			hidden_processes, hide: true
+			data, win, processes_dir, config, 
+			hidden_processes_file, hidden_processes, hide: true
 		}
 	}
 
@@ -41,7 +56,7 @@ impl TimeSpent {
 		self.hidden_processes = 
 			utils::get_hidden_processes(&self.hidden_processes_file);
 
-		self.data = utils::get_info(&self.processes_dir);
+		self.data = utils::get_info(&self.processes_dir, &self.config);
 	}
 
 	fn draw_footerbar(&mut self, ctx: &egui::Context) {

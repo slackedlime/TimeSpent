@@ -1,7 +1,8 @@
 use std::{fs, path::Path};
+use serde_json::Value as JsonValue;
 
-pub fn get_info(json_dir: &Path) -> Vec<serde_json::Value> {
-	let mut data: Vec<serde_json::Value> = match fs::read_dir(json_dir) {
+pub fn get_info(json_dir: &Path, config: &JsonValue) -> Vec<JsonValue> {
+	let mut data: Vec<JsonValue> = match fs::read_dir(json_dir) {
 		Ok(paths) => {
 			let mut files = Vec::new();
 			
@@ -13,7 +14,11 @@ pub fn get_info(json_dir: &Path) -> Vec<serde_json::Value> {
 				if let Ok(json) = serde_json::from_str(&content) {
 					files.push(json);
 				} else {
-					println!("Error: Could not read {:?}", proper_path)
+					if config["autoDeleteCorrupted"].as_bool().unwrap_or(false) {
+						fs::remove_file(&proper_path).unwrap();
+					}
+
+					println!("Error: Could not read {:?}", proper_path);
 				}
 			}
 
@@ -29,7 +34,7 @@ pub fn get_info(json_dir: &Path) -> Vec<serde_json::Value> {
 	return data;
 }
 
-pub fn get_hidden_processes(hidden_processes_file: &Path) -> Vec<serde_json::Value> {
+pub fn get_hidden_processes(hidden_processes_file: &Path) -> Vec<JsonValue> {
 	if !hidden_processes_file.exists() {
 		match fs::write(&hidden_processes_file, "[]".as_bytes()) {
 			Ok(_) => println!("hidden.json Created"),

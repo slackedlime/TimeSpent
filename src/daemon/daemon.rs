@@ -2,10 +2,12 @@
 
 #[path = "../globals.rs"]
 mod globals;
+#[path = "../getconfig.rs"]
+mod getconfig;
+mod write;
 
 use std::{thread, fs, process, path::Path, time::Duration};
 use sysinfo::{self, SystemExt, PidExt, ProcessExt};
-use serde_json::json;
 
 #[cfg(target_os = "windows")]
 fn get_pid() -> u32 {
@@ -55,52 +57,8 @@ fn get_focused_application(system: &sysinfo::System) -> (String, &Path) {
 	return ("Idle".to_string(), Path::new("/"))
 }
 
-fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path) 
-	-> std::io::Result<()> {
-		
-	let data_file = json_dir.join(format!("{}.json", name));
-
-	let friendly_name = match name.rsplit_once(".") {
-		Some(n) => n.0,
-		None => &name,
-	};
-
-	if !data_file.is_file() {
-		let j = json!({
-			"name": name,
-			"friendlyName": friendly_name,
-			"exeLocation": exe_dir.to_str().unwrap(),
-			"totalTimeRun": 0,
-			"perDayTimeRun": {}
-		});
-
-		fs::write(&data_file, j.to_string().as_bytes())?;
-	}
-
-	let contents = fs::read_to_string(&data_file)?;
-
-	// totalTimeRun
-	let mut info: serde_json::Value = serde_json::from_str(&contents)?;
-	info["totalTimeRun"] = json!(info["totalTimeRun"].as_u64().unwrap() + 1);
-
-	// perDayTimeRun
-	let today = globals::get_date();
-
-	if info["perDayTimeRun"].get(&today).is_none() {
-		info["perDayTimeRun"][&today] = json!(0);
-	}
-
-	info["perDayTimeRun"][&today] = 
-		json!(info["perDayTimeRun"][&today].as_u64().unwrap() + 1);
-	//
-
-	fs::write(&data_file, info.to_string().as_bytes())?;
-
-	Ok(())
-}
-
 fn main() {
-	let [processes_dir, _] = globals::get_dirs();
+	let [processes_dir, config_file, _] = globals::get_dirs();
 	
 	if !processes_dir.is_dir() {
 		if let Err(e) = fs::create_dir_all(&processes_dir) {
@@ -113,6 +71,15 @@ fn main() {
 		println!("Created {:?}", processes_dir);
 	}
 	
+	let config = match getconfig::get_config(&config_file) {
+		Ok(json) => json,
+
+		Err(e) => {
+			println!("Error: {}", e);
+			getconfig::get_default_config()
+		}
+	};
+
 	// Make sysinfo only refresh the process list
 	let only_processes = sysinfo::ProcessRefreshKind::new();
 	let r = sysinfo::RefreshKind::new().with_processes(only_processes);
@@ -129,10 +96,12 @@ fn main() {
 		system.refresh_processes_specifics(only_processes);
 		let (name, exe) = get_focused_application(&system);
 
-		if let Err(e) = set_json_data(name, exe, &processes_dir) {
+		if let Err(e) = write::set_json_data(name, exe, &processes_dir, &config) {
 			println!("Error: {}", e)
 		}
 
-		thread::sleep( Duration::from_secs(1) )
+		thread::sleep( 
+			Duration::from_secs( config["tickSpeed"].as_u64().unwrap_or(1) ) 
+		)
 	}
 }
