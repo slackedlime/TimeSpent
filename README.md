@@ -5,7 +5,7 @@
 **A simple GUI rust application that keeps track of how much time you spend on each application.**
 
 ## Installation
-[Click here](https://github.com/slackedlime/TimeSpent/releases/download/Major/TimeSpent.Setup.v1.0.WIN.zip) to download the Setup.
+[Click here](https://github.com/slackedlime/TimeSpent/releases/download/1.1/TimeSpent.Setup.v1.1.exe) to download the Setup.
 Extract the file and then Double click on it.
 <br>
 Follow the setup and that should be it. TimeSpent should be in your Start Menu.
