@@ -41,7 +41,7 @@ impl TimeSpent {
 
 		let data = utils::get_info(&processes_dir, &config);
 
-		let win = windows::Window::new();
+		let win = windows::Window::default();
 
 		return TimeSpent { 
 			data, win, processes_dir, config, 

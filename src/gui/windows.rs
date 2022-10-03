@@ -3,10 +3,10 @@ mod renamewindow;
 mod deletewindow;
 
 use eframe::egui;
-use serde_json::json;
 
 use crate::TimeSpent;
 
+#[derive(Default)]
 pub struct Window {
 	pub status_window: bool,
 	pub status_data: serde_json::Value,
@@ -21,19 +21,6 @@ pub struct Window {
 	pub rename_data: serde_json::Value,
 	pub rename_to: String,
 	pub rename_error: String,
-}
-
-impl Window {
-	pub fn new() -> Self {
-		return Window {
-			status_window: false, status_data: json!({}),
-			raw_data_window: false, raw_data: json!({}),
-			delete_window: false, delete_data: json!({}),
-
-			rename_window: false, rename_data: json!({}), 
-			rename_to: String::new(), rename_error: String::new(),
-		}
-	}
 }
 
 impl TimeSpent {
