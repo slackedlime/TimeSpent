@@ -16,36 +16,25 @@ struct TimeSpent {
 	win: windows::Window,
 	processes_dir: PathBuf,
 
-	config: serde_json::Value,
-
 	hidden_processes_file: PathBuf,
 	hidden_processes: Vec<serde_json::Value>,
 	hide: bool,
 }
 
 impl TimeSpent {
-	fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-		let [processes_dir, config_file, hidden_processes_file] = globals::get_dirs();
+	fn new() -> Self {
+		let [processes_dir, _, hidden_processes_file] = globals::get_dirs();
 
 		let hidden_processes = 
 			utils::get_hidden_processes(&hidden_processes_file);
 
-		let config = match globals::get_config(&config_file) {
-			Ok(json) => json,
-	
-			Err(e) => {
-				println!("Error: {}", e);
-				globals::get_default_config()
-			}
-		};
-
-		let data = utils::get_info(&processes_dir, &config);
+		let data = utils::get_info(&processes_dir);
 
 		let win = windows::Window::default();
 
 		return TimeSpent { 
-			data, win, processes_dir, config, 
-			hidden_processes_file, hidden_processes, hide: true
+			data, win, processes_dir, hidden_processes_file,
+			hidden_processes, hide: true
 		}
 	}
 
@@ -53,7 +42,7 @@ impl TimeSpent {
 		self.hidden_processes = 
 			utils::get_hidden_processes(&self.hidden_processes_file);
 
-		self.data = utils::get_info(&self.processes_dir, &self.config);
+		self.data = utils::get_info(&self.processes_dir);
 	}
 
 	fn draw_footerbar(&mut self, ctx: &egui::Context) {
@@ -131,5 +120,5 @@ fn main() {
 	});
 
 	eframe::run_native("Time Spent", win_opts,
-		Box::new(|cc| Box::new(TimeSpent::new(cc))));
+		Box::new(|_cc| Box::new(TimeSpent::new())));
 }

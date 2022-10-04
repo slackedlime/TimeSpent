@@ -1,7 +1,7 @@
 use std::{fs, path::Path};
 use serde_json::Value as JsonValue;
 
-pub fn get_info(json_dir: &Path, config: &JsonValue) -> Vec<JsonValue> {
+pub fn get_info(json_dir: &Path) -> Vec<JsonValue> {
 	let mut data: Vec<JsonValue> = match fs::read_dir(json_dir) {
 		Ok(paths) => {
 			let mut files = Vec::new();
@@ -14,13 +14,6 @@ pub fn get_info(json_dir: &Path, config: &JsonValue) -> Vec<JsonValue> {
 				if let Ok(json) = serde_json::from_str(&content) {
 					files.push(json);
 				} else {
-					if config["autoDeleteCorrupted"].as_bool().unwrap_or(false) {
-						if let Err(e) = fs::remove_file(&proper_path) {
-							println!("Failed to remove corrupted file");
-							println!("Error: {}", e);
-						};
-					}
-
 					println!("Error: Could not read {:?}", proper_path);
 				}
 			}

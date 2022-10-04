@@ -1,6 +1,39 @@
 use std::{fs, path::Path};
 use serde_json::{json, Value as JsonValue};
 
+// ==CONFIG DOCUMENTATION==
+// "tickSpeed" Controls how often the application checks for the focused app
+// it is recommended to not put it above 10
+//
+// "autoDeleteCorrupted" deletes corrupted json files
+// (Disable it if you plan on manually editing the Json)
+//
+// "safeWrite" decreases the probability of json being corrupted
+// disabling it might increase performance (NOT RECOMMENDED)
+
+pub fn get_default_config() -> JsonValue {
+	return serde_json::json!({
+		"tickSpeed": 1,
+		"autoDeleteCorrupted": true,
+		"safeWrite": true,
+	});
+}
+
+pub fn get_config(file_path: &Path) -> std::io::Result<JsonValue> {
+	if !file_path.is_file() {
+		let default_json = get_default_config();
+
+		let pretty_json = serde_json::to_string_pretty(&default_json).unwrap();
+
+		fs::write(&file_path, pretty_json.as_bytes())?;
+	}
+
+	let contents = fs::read_to_string(&file_path)?;
+
+	return Ok(serde_json::from_str(&contents)?);
+}
+
+
 pub fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path, config: &JsonValue) 
 	-> std::io::Result<()> {
 		
@@ -28,7 +61,20 @@ pub fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path, config: &Jso
 	let tick_speed = config["tickSpeed"].as_u64().unwrap_or(1);
 
 	// totalTimeRun
-	let mut info: serde_json::Value = serde_json::from_str(&contents)?;
+	let mut info: JsonValue = match serde_json::from_str(&contents) {
+		Ok(data) => data,
+		Err(e) => {
+			if config["autoDeleteCorrupted"].as_bool().unwrap_or(false) {
+				if let Err(e) = fs::remove_file(&data_file) {
+					println!("Failed to remove corrupted file");
+					println!("Error: {}", e);
+				};
+			}
+
+			return Err(e.into())
+		}
+	};
+
 	info["totalTimeRun"] = json!(info["totalTimeRun"].as_u64().unwrap() + tick_speed);
 
 	// perDayTimeRun

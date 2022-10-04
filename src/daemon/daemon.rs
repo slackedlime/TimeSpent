@@ -69,12 +69,12 @@ fn main() {
 		println!("Created {:?}", processes_dir);
 	}
 	
-	let config = match globals::get_config(&config_file) {
+	let config = match write::get_config(&config_file) {
 		Ok(json) => json,
 
 		Err(e) => {
 			println!("Error: {}", e);
-			globals::get_default_config()
+			write::get_default_config()
 		}
 	};
 
