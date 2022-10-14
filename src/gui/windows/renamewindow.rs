@@ -24,9 +24,9 @@ impl TimeSpent {
 			if self.win.rename_to.is_empty() {
 				self.win.rename_error = "Please Enter a New Name".to_string();
 			
-			} else if self.win.rename_to.len() > 20 {
+			} else if self.win.rename_to.len() > 25 {
 				self.win.rename_error = 
-					"Please Enter a Name Shorter than 20 Letters".to_string();
+					"Please Enter a Name Shorter than 25 Letters".to_string();
 			
 			} else {
 				self.win.rename_error = String::new();
