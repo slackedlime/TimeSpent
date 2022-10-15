@@ -23,7 +23,9 @@ struct TimeSpent {
 
 impl TimeSpent {
 	fn new() -> Self {
-		let [processes_dir, _, hidden_processes_file] = globals::get_dirs();
+		let file_dirs = globals::Dirs::new();
+		let processes_dir = file_dirs.processes_dir;
+		let hidden_processes_file = file_dirs.hidden_processes;
 
 		let hidden_processes = 
 			utils::get_hidden_processes(&hidden_processes_file);
@@ -32,7 +34,7 @@ impl TimeSpent {
 
 		let win = windows::Window::default();
 
-		return TimeSpent { 
+		return Self { 
 			data, win, processes_dir, hidden_processes_file,
 			hidden_processes, hide: true
 		}

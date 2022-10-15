@@ -50,7 +50,7 @@ impl TimeSpent {
 					if let Err(e) = std::fs::write(&fullpath, 
 									rename_data.to_string().as_bytes()) {
 
-						print!("{:?} Could not be written\nError: {}", fullpath, e)
+						crate::log!("{:?} Could not be written ({})", fullpath, e);
 					}
 
 					

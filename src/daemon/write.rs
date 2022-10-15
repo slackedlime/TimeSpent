@@ -66,8 +66,7 @@ pub fn set_json_data(name: String, exe_dir: &Path, json_dir: &Path, config: &Jso
 		Err(e) => {
 			if config["autoDeleteCorrupted"].as_bool().unwrap_or(false) {
 				if let Err(e) = fs::remove_file(&data_file) {
-					println!("Failed to remove corrupted file");
-					println!("Error: {}", e);
+					crate::log!("Failed to remove corrupted file ({})", e);
 				};
 			}
 

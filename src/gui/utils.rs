@@ -1,5 +1,6 @@
 use std::{fs, path::Path};
 use serde_json::Value as JsonValue;
+use crate::log;
 
 pub fn get_info(json_dir: &Path) -> Vec<JsonValue> {
 	let mut data: Vec<JsonValue> = match fs::read_dir(json_dir) {
@@ -14,7 +15,7 @@ pub fn get_info(json_dir: &Path) -> Vec<JsonValue> {
 				if let Ok(json) = serde_json::from_str(&content) {
 					files.push(json);
 				} else {
-					println!("Error: Could not read {:?}", proper_path);
+					log!("Could not read {:?}", proper_path);
 				}
 			}
 
@@ -33,8 +34,8 @@ pub fn get_info(json_dir: &Path) -> Vec<JsonValue> {
 pub fn get_hidden_processes(hidden_processes_file: &Path) -> Vec<JsonValue> {
 	if !hidden_processes_file.exists() {
 		match fs::write(&hidden_processes_file, "[]".as_bytes()) {
-			Ok(_) => println!("hidden.json Created"),
-			Err(_) => println!("hidden.json Couldn't be Created"),
+			Ok(_) => log!("hidden.json Created"),
+			Err(_) => log!("hidden.json Couldn't be Created"),
 		}
 	}
 
@@ -44,7 +45,7 @@ pub fn get_hidden_processes(hidden_processes_file: &Path) -> Vec<JsonValue> {
 	let content = match serde_json::from_str(&raw_content) {
 		Ok(cont) => cont,
 		Err(e) => {
-			println!("{:?}", e);
+			log!("Couldn't process hidden.json ({})", e);
 			serde_json::json!([])
 		},
 	};

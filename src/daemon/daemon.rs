@@ -28,8 +28,8 @@ fn get_pid() -> u32 {
 					 .output();
 	
 	if output_opt.is_err() {
-		println!("Failed to execute process");
-		println!("Is xdotool installed?");
+		log!("Failed to execute process");
+		log!("Is xdotool installed?");
 
 		process::exit(1);
 	}
@@ -56,24 +56,25 @@ fn get_focused_application(system: &sysinfo::System) -> (String, &Path) {
 }
 
 fn main() {
-	let [processes_dir, config_file, _] = globals::get_dirs();
-	
+	let file_dirs = globals::Dirs::new();
+	let processes_dir = file_dirs.processes_dir;
+	let config_file = file_dirs.daemon_config;
+
 	if !processes_dir.is_dir() {
 		if let Err(e) = fs::create_dir_all(&processes_dir) {
-			println!("Could not create {:?}", processes_dir);
-			println!("Reason: {}", e);
+			log!("Could not create {:?} ({})", processes_dir, e);
 
 			process::exit(1);
 		}
 
-		println!("Created {:?}", processes_dir);
+		log!("Created {:?}", processes_dir);
 	}
 	
 	let config = match write::get_config(&config_file) {
 		Ok(json) => json,
 
 		Err(e) => {
-			println!("Error: {}", e);
+			log!("Couldn't write Config ({})", e);
 			write::get_default_config()
 		}
 	};
@@ -86,7 +87,7 @@ fn main() {
 
 	// If TimeSpentDaemon is already running, then stop execution
 	if system.processes_by_name("TimeSpentDaemon").count() > 1 {
-		println!("The Daemon is already running");
+		log!("The Daemon is already running");
 		process::exit(1);
 	}
 
@@ -95,11 +96,11 @@ fn main() {
 		let (name, exe) = get_focused_application(&system);
 
 		if let Err(e) = write::set_json_data(name, exe, &processes_dir, &config) {
-			println!("Error: {}", e)
+			log!("Couldn't write json ({})", e);
 		}
 
 		thread::sleep( 
 			Duration::from_secs( config["tickSpeed"].as_u64().unwrap_or(1) ) 
-		)
+		);
 	}
 }

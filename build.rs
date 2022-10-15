@@ -4,8 +4,7 @@ fn main() {
 		res.set_icon("imgs/hummingbird_new.ico");
 
 		if let Err(e) = res.compile() {
-			eprintln!("Could not attach Icon to executable");
-			eprintln!("Error: {}\n", e);
+			eprintln!("Could not attach Icon to executable ({})", e);
 		}
 	}
 }

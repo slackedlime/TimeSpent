@@ -1,16 +1,59 @@
-use chrono::{self, Datelike};
-use std::path::PathBuf;
+use chrono::offset::Local;
+use std::{path::PathBuf, io::Write};
 
-pub fn get_dirs() -> [PathBuf; 3] {
-	let data_dir = dirs::data_dir().unwrap().join("Time-Spent");
-	let processes_dir = data_dir.join("processes");
-	let daemon_config = data_dir.join("daemon.json");
-	let hidden_processes = data_dir.join("hidden.json");
+#[macro_export]
+macro_rules! log {
+	($($arg:tt)*) => {
+		crate::globals::write_log(format!($($arg)*))
+	}
+}
 
-	return [processes_dir, daemon_config, hidden_processes]
+pub struct Dirs {
+	pub processes_dir: PathBuf,
+	pub daemon_config: PathBuf,
+	pub hidden_processes: PathBuf,
+	pub log_file: PathBuf,
+}
+
+impl Dirs {
+	pub fn new() -> Self {
+		let data_dir = dirs::data_dir().unwrap().join("Time-Spent");
+
+		return Self {
+			processes_dir: data_dir.join("processes"),
+			daemon_config: data_dir.join("daemon.json"),
+			hidden_processes: data_dir.join("hidden.json"),
+			log_file: data_dir.join("log.txt"),
+		}
+	}
+}
+
+pub fn write_log(msg: String) {
+	let log_file = Dirs::new().log_file;
+
+	let time = Local::now().format("[%X %v]");
+
+	let file_result = std::fs::OpenOptions::new()
+						.append(true)
+						.create(true)
+						.open(log_file);
+	
+	println!("{}", msg);
+
+	match file_result {
+		Ok(mut file) => {
+			if let Err(e) = writeln!(file, "{} {}", time, msg) {
+				eprintln!("Couldn't write to Log ({})", e)
+			};
+		},
+
+		Err(e) => {
+			eprintln!("Couldn't make Log File ({})", e)
+		},
+	}
 }
 
 pub fn get_date() -> String {
-	let t = chrono::offset::Local::now();  
-	return format!("{}/{:0>2}/{:0>2}", t.year(), t.month(), t.day())
+	let time = Local::now();
+	return time.format("%Y/%m/%d").to_string()
 }

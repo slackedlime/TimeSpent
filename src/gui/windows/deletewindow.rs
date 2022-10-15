@@ -48,8 +48,7 @@ impl TimeSpent {
 					let fullpath = &self.processes_dir.join(filename);
 
 					if let Err(e) = std::fs::remove_file(fullpath) {
-						println!("Couldn't delete {}", data["name"]);
-						println!("Error: {}", e);
+						crate::log!("Couldn't delete {} ({})", data["name"], e);
 					}
 
 					self.refresh();
