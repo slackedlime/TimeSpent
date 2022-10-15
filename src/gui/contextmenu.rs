@@ -23,6 +23,13 @@ impl TimeSpent {
 	pub fn draw_context_menu(&mut self, name: String, 
 		data: &serde_json::Value, ui: &mut eframe::egui::Ui) {
 		
+		let hide_button_text = 
+			if self.hidden_processes.contains(&json!(data["name"])) {
+				"Unhide" 
+			} else {
+				 "Hide" 
+			};
+
 		eframe::egui::ScrollArea::vertical().show(ui, |ui| {
 			ui.vertical_centered(|ui| {
 				ui.monospace(name);
@@ -40,27 +47,22 @@ impl TimeSpent {
 				ui.close_menu();
 			}
 			
-			let hide_button_text = 
-				if self.hidden_processes.contains(&json!(data["name"])) { 
-					"Unhide" 
-				} else {
-					 "Hide" 
-				};
-			
 			if ui.button(hide_button_text).clicked() {
 				
-				if hide_button_text == "Hide" {
+				if hide_button_text == "Hide" { 
 					self.hidden_processes.push( json!(data["name"]) );
 				} else {
 					// Remove that process from the list of hidden processes
-					self.hidden_processes.retain( |x| x != &data["name"] )
+					self.hidden_processes.retain( |x| x != &data["name"] );
 				}
 				
 				match std::fs::write(&self.hidden_processes_file,
 					  json!(self.hidden_processes).to_string().as_bytes()) {
 	
 					Ok(_) => {},
-					Err(_) => println!("hidden.json Couldn't be written to disk"),
+					Err(_) => {
+						crate::log!("hidden.json Couldn't be written to disk")
+					},
 				}
 	
 				ui.close_menu();

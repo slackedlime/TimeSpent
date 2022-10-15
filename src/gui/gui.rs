@@ -18,7 +18,7 @@ struct TimeSpent {
 
 	hidden_processes_file: PathBuf,
 	hidden_processes: Vec<serde_json::Value>,
-	hide: bool,
+	show_hidden: bool,
 }
 
 impl TimeSpent {
@@ -36,7 +36,7 @@ impl TimeSpent {
 
 		return Self { 
 			data, win, processes_dir, hidden_processes_file,
-			hidden_processes, hide: true
+			hidden_processes, show_hidden: false
 		}
 	}
 
@@ -52,14 +52,14 @@ impl TimeSpent {
 		.show(ctx, |ui| {
 			ui.horizontal_centered(|ui| {
 				if ui.button("Refresh").clicked() {
-					self.refresh()
+					self.refresh();
 				}
 
-				let hide_button_text = format!( "{} Hidden Items", 
-									   if self.hide {"Show"} else {"Hide"} );
+				let hide_button_text = format!("{} Hidden Items", 
+									   if self.show_hidden {"Hide"} else {"Show"});
 
 				if ui.button(hide_button_text).clicked() {
-					self.hide = !self.hide
+					self.show_hidden = !self.show_hidden;
 				}
 
 				ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
