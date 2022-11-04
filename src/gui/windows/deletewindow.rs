@@ -22,8 +22,7 @@ impl TimeSpent {
 					egui::Label::new(
 						egui::RichText::new(
 
-								self.win.status_data["exeLocation"]
-								.as_str().unwrap_or("null")
+								data["exeLocation"].as_str().unwrap_or("null")
 								
 						).monospace()
 					).wrap(true)
