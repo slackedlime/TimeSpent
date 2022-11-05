@@ -3,6 +3,7 @@ name = "time-spent"
 version = "0.1.2"
 edition = "2021"
 build = "build.rs"
+authors = ["SlackedLime <slackedlime@proton.me>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
